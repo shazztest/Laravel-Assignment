@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function(){
     Route::post('/createposts',[PostController::class,'createPost']);
-    Route::post('/allposts',[PostController::class,'allPosts']);
+    Route::get('/allposts',[PostController::class,'allPosts']);
+    Route::post('/updateposts/{id}',[PostController::class,'updatePosts']);
+    Route::delete('/deleteposts/{id}',[PostController::class,'deletePosts']);
+});
+
+Route::prefix('admin')->middleware(['auth:api', 'admin'])->group(function(){
+    Route::get('/admin', [AdminController::class, 'checkadmin']);
+    Route::get('/getAllRoles', [AdminController::class, 'getAllRoles']);
+    Route::get('/getAllPosts', [AdminController::class, 'getAllPosts']);
+    Route::post('/getCreatePosts', [AdminController::class, 'getCreatePosts']);
+    Route::post('/getUpdatePosts/{id}', [AdminController::class, 'getUpdatePosts']);
+    Route::get('/getDeletePosts/{id}', [AdminController::class, 'getDeletePosts']);
+
 });
 
 Route::post('/register',[UserController::class,'createUser']);

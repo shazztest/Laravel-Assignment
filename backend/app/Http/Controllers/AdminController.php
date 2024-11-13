@@ -4,43 +4,56 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\Post;
+use App\Models\User;
 
-class PostController extends Controller
+class AdminController extends Controller
 {
-    public function createPost(Request $request){
+    public function __construct()
+    {
+        $this->middleware(['auth:api', 'admin']);
+    }
+
+    public function getAllUsers(){
+        $users = User::all();
+        return response()->json(['users'=>$users],201);
+    }
+
+    public function getAllRoles(){
+        $roles = Role::all();
+        return response()->json(['roles'=>$roles],201);
+    }
+
+    public function getAllPosts(){
+        $posts = Post::all();
+        return response()->json(['posts'=>$posts],201);
+    }
+
+    public function getCreatePosts(Request $request){
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'required|string'
         ]);
 
         $post = $request->user()->posts()->create([
             'title' => $request->title,
-            'description' => $request->description,
+            'description' => $request->description
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Post Created succesfully',
+            'message' => 'Post Created...!',
             'post' => $post
         ],201);
     }
 
-    public function allPosts(Request $request){
-        $posts = $request->user()->posts()->get();
-        return response()->json([
-            'success' => true,
-            'posts' => $posts
-        ],200);
-    }
-
-    public function updatePosts(Request $request,$id){
+    public function getUpdatePosts(Request $request,$id){
         $reques->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string'  
         ]);
 
-        $post = Post::where('id',$id)->where('user_id', Auth::id())->first();
-
+        $post = Post::where('id',$id)->first();
         if(!$post){
             return response()->json([
                 'success' => false,
@@ -50,17 +63,16 @@ class PostController extends Controller
 
         $post->update([
             'title' => $request->title,
-            'description' => $request->description 
+            'description' => $request->description
         ]);
-
         return response()->json([
             'success' => true,
             'posts' => $post
         ],200);
     }
 
-    public function deletePosts(Request $request,$id){
-        $post = Post::where('id',$id)->where('user_id', Auth::id())->first();
+    public function getDeletePosts(Request $request,$id){
+        $post = Post::where('id',$id)->first();
 
         if(!$post){
             return response()->json([
