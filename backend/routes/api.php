@@ -25,7 +25,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/createposts',[PostController::class,'createPost']);
     Route::get('/allposts',[PostController::class,'allPosts']);
     Route::get('/getpost/{id}',[PostController::class,'getPostById']);
-    Route::post('/updateposts/{id}',[PostController::class,'updatePosts']);
+    Route::put('/updateposts/{id}',[PostController::class,'updatePosts']);
     Route::delete('/deleteposts/{id}',[PostController::class,'deletePosts']);
 });
 
