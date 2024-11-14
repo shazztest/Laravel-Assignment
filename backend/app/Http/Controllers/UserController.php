@@ -40,6 +40,7 @@ class UserController extends Controller
             'address' => $request->address,
         ]);
         $user->roles()->attach(2);
+        $roles = $user->roles()->pluck('name');
         $token = $user->createToken('API Token')->accessToken;
 
         return response()->json([
@@ -47,7 +48,8 @@ class UserController extends Controller
             'messages' => 'User Register Successfully',
             'data' => [
                 'user' =>$user,
-                'token' => $token
+                'token' => $token,
+                'role' => $roles,
             ]
         ],201);
     }

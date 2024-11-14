@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -23,6 +25,14 @@ class PostController extends Controller
             'message' => 'Post Created succesfully',
             'post' => $post
         ],201);
+    }
+
+    public function getPostById(Request $request, $id){
+        $post = Post::where('id',$id)->where('user_id', Auth::id())->first();
+        return response()->json([
+            'success' => true,
+            'post' => $post,
+        ],200);
     }
 
     public function allPosts(Request $request){

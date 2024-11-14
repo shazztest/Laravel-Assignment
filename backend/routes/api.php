@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->group(function(){
     Route::post('/createposts',[PostController::class,'createPost']);
     Route::get('/allposts',[PostController::class,'allPosts']);
+    Route::get('/getpost/{id}',[PostController::class,'getPostById']);
     Route::post('/updateposts/{id}',[PostController::class,'updatePosts']);
     Route::delete('/deleteposts/{id}',[PostController::class,'deletePosts']);
 });
@@ -35,7 +36,6 @@ Route::prefix('admin')->middleware(['auth:api', 'admin'])->group(function(){
     Route::post('/getCreatePosts', [AdminController::class, 'getCreatePosts']);
     Route::post('/getUpdatePosts/{id}', [AdminController::class, 'getUpdatePosts']);
     Route::get('/getDeletePosts/{id}', [AdminController::class, 'getDeletePosts']);
-
 });
 
 Route::post('/register',[UserController::class,'createUser']);
